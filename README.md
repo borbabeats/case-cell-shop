@@ -28,7 +28,7 @@ A aplicação permite aos usuários:
 ### Clone do Repositório
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/borbabeats/case-cell-shop.git
 cd case-cell-shop
 ```
 
