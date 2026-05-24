@@ -1,6 +1,11 @@
 import Database from 'better-sqlite3';
 import { join } from 'path';
-import { ProductColor, ProductCategory, OrderStatus, PaymentMethod } from '../drizzle/enums';
+import {
+  ProductColor,
+  ProductCategory,
+  OrderStatus,
+  PaymentMethod,
+} from '../drizzle/enums';
 
 export function initializeDatabase() {
   const sqlite = new Database(join(__dirname, '../../database.db'));
@@ -46,11 +51,13 @@ export function initializeDatabase() {
   `);
 
   // Inserir dados de teste se a tabela products estiver vazia
-  const productCount = sqlite.prepare('SELECT COUNT(*) as count FROM products').get() as { count: number };
-  
+  const productCount = sqlite
+    .prepare('SELECT COUNT(*) as count FROM products')
+    .get() as { count: number };
+
   if (productCount.count === 0) {
     console.log('Inserindo dados de teste...');
-    
+
     const insertProduct = sqlite.prepare(`
       INSERT INTO products (id, name, color, category, price, description, stock, image, created_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -62,221 +69,260 @@ export function initializeDatabase() {
         name: 'iPhone 15 Pro',
         color: ProductColor.BLACK,
         category: ProductCategory.SILICONE,
-        price: 25.00,
-        description: 'Capa de silicone premium para iPhone 15 Pro, proteção completa e design ergonômico',
+        price: 25.0,
+        description:
+          'Capa de silicone premium para iPhone 15 Pro, proteção completa e design ergonômico',
         stock: 30,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'iPhone 15 Pro',
         color: ProductColor.WHITE,
         category: ProductCategory.LEATHER,
-        price: 89.00,
-        description: 'Capa de couro legítimo para iPhone 15 Pro, acabamento luxuoso e durabilidade superior',
+        price: 89.0,
+        description:
+          'Capa de couro legítimo para iPhone 15 Pro, acabamento luxuoso e durabilidade superior',
         stock: 15,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Samsung Galaxy S24',
         color: ProductColor.BLUE,
         category: ProductCategory.PLASTIC,
-        price: 19.00,
-        description: 'Capa de plástico resistente para Samsung Galaxy S24, proteção básica e design leve',
+        price: 19.0,
+        description:
+          'Capa de plástico resistente para Samsung Galaxy S24, proteção básica e design leve',
         stock: 45,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Samsung Galaxy S24',
         color: ProductColor.BLACK,
         category: ProductCategory.SILICONE,
-        price: 29.00,
-        description: 'Capa de silicone antichoque para Samsung Galaxy S24, absorção de impacto superior',
+        price: 29.0,
+        description:
+          'Capa de silicone antichoque para Samsung Galaxy S24, absorção de impacto superior',
         stock: 35,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Google Pixel 8',
         color: ProductColor.GREEN,
         category: ProductCategory.BAMBOO,
-        price: 95.00,
-        description: 'Capa de bambu ecológica para Google Pixel 8, material sustentável e design natural',
+        price: 95.0,
+        description:
+          'Capa de bambu ecológica para Google Pixel 8, material sustentável e design natural',
         stock: 12,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Google Pixel 8',
         color: ProductColor.PINK,
         category: ProductCategory.SILICONE,
-        price: 35.00,
-        description: 'Capa de silicone macia para Google Pixel 8, textura agradável e proteção diária',
+        price: 35.0,
+        description:
+          'Capa de silicone macia para Google Pixel 8, textura agradável e proteção diária',
         stock: 28,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Xiaomi 14',
         color: ProductColor.GRAY,
         category: ProductCategory.METAL,
-        price: 75.00,
-        description: 'Capa de metal premium para Xiaomi 14, proteção robusta e design industrial',
+        price: 75.0,
+        description:
+          'Capa de metal premium para Xiaomi 14, proteção robusta e design industrial',
         stock: 20,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Xiaomi 14',
         color: ProductColor.WHITE,
         category: ProductCategory.PLASTIC,
-        price: 15.00,
-        description: 'Capa de plástico transparente para Xiaomi 14, mostra o design original do aparelho',
+        price: 15.0,
+        description:
+          'Capa de plástico transparente para Xiaomi 14, mostra o design original do aparelho',
         stock: 50,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'iPhone 15',
         color: ProductColor.RED,
         category: ProductCategory.SILICONE,
-        price: 28.00,
-        description: 'Capa de silicone vermelha para iPhone 15, proteção completa com vibrante',
+        price: 28.0,
+        description:
+          'Capa de silicone vermelha para iPhone 15, proteção completa com vibrante',
         stock: 40,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'iPhone 15',
         color: ProductColor.BLACK,
         category: ProductCategory.LEATHER,
-        price: 85.00,
-        description: 'Capa de couro preto para iPhone 15, elegância e proteção premium',
+        price: 85.0,
+        description:
+          'Capa de couro preto para iPhone 15, elegância e proteção premium',
         stock: 18,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'iPhone 15 Plus',
         color: ProductColor.BLUE,
         category: ProductCategory.SILICONE,
-        price: 32.00,
-        description: 'Capa de silicone para iPhone 15 Plus, ajuste perfeito e proteção avançada',
+        price: 32.0,
+        description:
+          'Capa de silicone para iPhone 15 Plus, ajuste perfeito e proteção avançada',
         stock: 25,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Samsung Galaxy S24 Ultra',
         color: ProductColor.TITANIUM,
         category: ProductCategory.METAL,
-        price: 99.00,
-        description: 'Capa de metal titânio para Samsung Galaxy S24 Ultra, ultra resistente e premium',
+        price: 99.0,
+        description:
+          'Capa de metal titânio para Samsung Galaxy S24 Ultra, ultra resistente e premium',
         stock: 10,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Samsung Galaxy S24 Ultra',
         color: ProductColor.BLACK,
         category: ProductCategory.LEATHER,
-        price: 92.00,
-        description: 'Capa de couro para Samsung Galaxy S24 Ultra, luxo e proteção superior',
+        price: 92.0,
+        description:
+          'Capa de couro para Samsung Galaxy S24 Ultra, luxo e proteção superior',
         stock: 14,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Google Pixel 8 Pro',
         color: ProductColor.GRAY,
         category: ProductCategory.SILICONE,
-        price: 38.00,
-        description: 'Capa de silicone para Google Pixel 8 Pro, proteção completa e design moderno',
+        price: 38.0,
+        description:
+          'Capa de silicone para Google Pixel 8 Pro, proteção completa e design moderno',
         stock: 22,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Google Pixel 8a',
         color: ProductColor.MINT,
         category: ProductCategory.PLASTIC,
-        price: 18.00,
+        price: 18.0,
         description: 'Capa de plástico para Google Pixel 8a, leve e colorida',
         stock: 55,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Xiaomi 14 Pro',
         color: ProductColor.GOLD,
         category: ProductCategory.METAL,
-        price: 88.00,
-        description: 'Capa de metal dourado para Xiaomi 14 Pro, design sofisticado e proteção robusta',
+        price: 88.0,
+        description:
+          'Capa de metal dourado para Xiaomi 14 Pro, design sofisticado e proteção robusta',
         stock: 16,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'OnePlus 12',
         color: ProductColor.GREEN,
         category: ProductCategory.SILICONE,
-        price: 30.00,
-        description: 'Capa de silicone para OnePlus 12, textura premium e proteção eficiente',
+        price: 30.0,
+        description:
+          'Capa de silicone para OnePlus 12, textura premium e proteção eficiente',
         stock: 33,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'OnePlus 12R',
         color: ProductColor.BLUE,
         category: ProductCategory.PLASTIC,
-        price: 17.00,
-        description: 'Capa de plástico para OnePlus 12R, proteção básica e custo benefício',
+        price: 17.0,
+        description:
+          'Capa de plástico para OnePlus 12R, proteção básica e custo benefício',
         stock: 48,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Motorola Edge 50 Pro',
         color: ProductColor.ORANGE,
         category: ProductCategory.SILICONE,
-        price: 26.00,
-        description: 'Capa de silicone para Motorola Edge 50 Pro, vibrante e protetora',
+        price: 26.0,
+        description:
+          'Capa de silicone para Motorola Edge 50 Pro, vibrante e protetora',
         stock: 38,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
       },
       {
         id: crypto.randomUUID(),
         name: 'Vivo V30 Pro',
         color: ProductColor.PURPLE,
         category: ProductCategory.LEATHER,
-        price: 79.00,
-        description: 'Capa de couro para Vivo V30 Pro, elegância e durabilidade',
+        price: 79.0,
+        description:
+          'Capa de couro para Vivo V30 Pro, elegância e durabilidade',
         stock: 19,
-        image: 'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
-        created_at: new Date().toISOString()
-      }
+        image:
+          'https://images.unsplash.com/photo-1592899677977-9c10ca588bbd?w=400',
+        created_at: new Date().toISOString(),
+      },
     ];
 
     const insertMany = sqlite.transaction((products) => {
@@ -290,7 +336,7 @@ export function initializeDatabase() {
           product.description,
           product.stock,
           product.image,
-          product.created_at
+          product.created_at,
         );
       }
     });

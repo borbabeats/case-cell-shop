@@ -49,6 +49,11 @@ npm install
 npm run start:dev
 ```
 
+4. Execute os testes:
+```bash
+npm run test
+```
+
 O backend estará rodando em `http://localhost:3000`
 
 A documentação da API Swagger estará disponível em `http://localhost:3000/api`
@@ -73,6 +78,11 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 4. Execute o servidor de desenvolvimento:
 ```bash
 npm run dev
+```
+
+5. Execute os testes:
+```bash
+npm run test
 ```
 
 O frontend estará rodando em `http://localhost:3001`
@@ -164,9 +174,9 @@ O frontend estará rodando em `http://localhost:3001`
   - Types centralizados para TypeScript
   - Estrutura de pastas lógica e escalável
 
-- [ ] **Desejável: incluir testes automatizados**
-  - Backend: estrutura Jest configurada mas sem testes implementados
-  - Frontend: sem testes implementados
+- [x] **Desejável: incluir testes automatizados**
+  - Backend: testes unitários implementados para checkout.service.ts (compra com sucesso)
+  - Frontend: testes unitários implementados para checkoutService.ts (compra com sucesso, estoque insuficiente, API indisponível/timeout)
 
 - [x] **Bônus: registrar decisões, trade-offs ou prompts de IA utilizados**
   - Documentado em `PROMPTS.md` com requisitos detalhados

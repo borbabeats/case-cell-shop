@@ -10,8 +10,13 @@ import { ProductNotFoundException } from '../common/exceptions/checkout.exceptio
 export class ProductsService {
   private readonly logger = new Logger(ProductsService.name);
 
-  async getAllProducts(filters: FindProductsDto): Promise<PaginatedResponse<any>> {
-    this.logger.log(`Buscando produtos com filtros: ${JSON.stringify(filters)}`, 'ProductsService.getAllProducts');
+  async getAllProducts(
+    filters: FindProductsDto,
+  ): Promise<PaginatedResponse<any>> {
+    this.logger.log(
+      `Buscando produtos com filtros: ${JSON.stringify(filters)}`,
+      'ProductsService.getAllProducts',
+    );
 
     const {
       page = 1,
@@ -83,16 +88,26 @@ export class ProductsService {
         limit,
       };
 
-      this.logger.log(`Encontrados ${total} produtos na página ${page}`, 'ProductsService.getAllProducts');
+      this.logger.log(
+        `Encontrados ${total} produtos na página ${page}`,
+        'ProductsService.getAllProducts',
+      );
       return result;
     } catch (error) {
-      this.logger.error(`Erro ao buscar produtos: ${error.message}`, error.stack, 'ProductsService.getAllProducts');
+      this.logger.error(
+        `Erro ao buscar produtos: ${error.message}`,
+        error.stack,
+        'ProductsService.getAllProducts',
+      );
       throw error;
     }
   }
 
   async getProductById(id: string) {
-    this.logger.log(`Buscando produto por ID: ${id}`, 'ProductsService.getProductById');
+    this.logger.log(
+      `Buscando produto por ID: ${id}`,
+      'ProductsService.getProductById',
+    );
 
     try {
       const [product] = await db
@@ -102,14 +117,24 @@ export class ProductsService {
         .limit(1);
 
       if (!product) {
-        this.logger.warn(`Produto não encontrado: ${id}`, 'ProductsService.getProductById');
+        this.logger.warn(
+          `Produto não encontrado: ${id}`,
+          'ProductsService.getProductById',
+        );
         throw new ProductNotFoundException(id);
       }
 
-      this.logger.log(`Produto encontrado: ${product.name}`, 'ProductsService.getProductById');
+      this.logger.log(
+        `Produto encontrado: ${product.name}`,
+        'ProductsService.getProductById',
+      );
       return product;
     } catch (error) {
-      this.logger.error(`Erro ao buscar produto ${id}: ${error.message}`, error.stack, 'ProductsService.getProductById');
+      this.logger.error(
+        `Erro ao buscar produto ${id}: ${error.message}`,
+        error.stack,
+        'ProductsService.getProductById',
+      );
       throw error;
     }
   }

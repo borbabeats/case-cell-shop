@@ -44,10 +44,11 @@ export class InvalidPayloadException extends HttpException {
 
 export class InvalidTotalAmountException extends HttpException {
   constructor(calculatedTotal: number, providedTotal: number) {
-    const message = providedTotal < calculatedTotal
-      ? 'Valor do pagamento informado é menor que o valor total do pedido'
-      : 'Valor do pagamento informado é maior que o valor total do pedido';
-    
+    const message =
+      providedTotal < calculatedTotal
+        ? 'Valor do pagamento informado é menor que o valor total do pedido'
+        : 'Valor do pagamento informado é maior que o valor total do pedido';
+
     super(
       {
         error: 'INVALID_TOTAL_AMOUNT',

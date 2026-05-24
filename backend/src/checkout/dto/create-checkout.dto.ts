@@ -1,9 +1,23 @@
-import { IsArray, IsString, IsUUID, IsNumber, IsPositive, Min, IsEnum, ValidateNested, IsOptional, IsNotEmpty } from 'class-validator';
+import {
+  IsArray,
+  IsString,
+  IsUUID,
+  IsNumber,
+  IsPositive,
+  Min,
+  IsEnum,
+  ValidateNested,
+  IsOptional,
+  IsNotEmpty,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 class CheckoutItemDto {
-  @ApiProperty({ description: 'ID do produto (UUID)', example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' })
+  @ApiProperty({
+    description: 'ID do produto (UUID)',
+    example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+  })
   @IsUUID(undefined, { message: 'O ID do produto deve ser um UUID válido' })
   productId: string;
 
@@ -15,7 +29,10 @@ class CheckoutItemDto {
 }
 
 class ShippingAddressDto {
-  @ApiProperty({ description: 'Rua do endereço', example: 'Rua das Flores, 123' })
+  @ApiProperty({
+    description: 'Rua do endereço',
+    example: 'Rua das Flores, 123',
+  })
   @IsString({ message: 'A rua deve ser uma string' })
   @IsNotEmpty({ message: 'A rua do endereço é obrigatória' })
   street: string;
@@ -32,17 +49,22 @@ class ShippingAddressDto {
 
   @ApiPropertyOptional({ description: 'CEP do endereço', example: '90120-000' })
   @IsString({ message: 'O CEP deve ser uma string' })
-  @IsOptional()
   zipCode?: string;
 }
 
 export class CreateCheckoutDto {
-  @ApiPropertyOptional({ description: 'ID do cliente (opcional)', example: 'cliente-123' })
+  @ApiPropertyOptional({
+    description: 'ID do cliente (opcional)',
+    example: 'cliente-123',
+  })
   @IsString({ message: 'O ID do cliente deve ser uma string' })
   @IsOptional()
   customerId?: string;
 
-  @ApiProperty({ type: [CheckoutItemDto], description: 'Lista de itens do pedido' })
+  @ApiProperty({
+    type: [CheckoutItemDto],
+    description: 'Lista de itens do pedido',
+  })
   @IsArray({ message: 'Os itens devem ser um array' })
   @ValidateNested({ each: true })
   @Type(() => CheckoutItemDto)
@@ -53,11 +75,22 @@ export class CreateCheckoutDto {
   @Type(() => ShippingAddressDto)
   shippingAddress: ShippingAddressDto;
 
-  @ApiProperty({ description: 'Método de pagamento', enum: ['credit_card', 'pix', 'debito'], example: 'credit_card' })
-  @IsEnum(['credit_card', 'pix', 'debito'], { message: 'O método de pagamento deve ser credit_card, pix ou debito' })
+  @ApiProperty({
+    description: 'Método de pagamento',
+    enum: ['credit_card', 'pix', 'debit_card'],
+    example: 'credit_card',
+  })
+  @IsEnum(['credit_card', 'pix', 'debit_card'], {
+    message:
+      'O método de pagamento deve ser Cartao de credito, pix ou Cartao de debito',
+  })
   paymentMethod: string;
 
-  @ApiProperty({ description: 'Valor total do pedido', example: 50.00, minimum: 0.01 })
+  @ApiProperty({
+    description: 'Valor total do pedido',
+    example: 50.0,
+    minimum: 0.01,
+  })
   @IsNumber(undefined, { message: 'O valor total deve ser um número' })
   @IsPositive({ message: 'O valor total deve ser maior que zero' })
   totalAmount: number;
