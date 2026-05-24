@@ -11,7 +11,7 @@ export enum ProductColor {
   PURPLE = 'roxo',
   GOLD = 'dourado',
   TITANIUM = 'titânio',
-  MINT = 'mint'
+  MINT = 'mint',
 }
 
 export enum ProductCategory {
@@ -19,7 +19,7 @@ export enum ProductCategory {
   PLASTIC = 'plástico',
   LEATHER = 'couro',
   METAL = 'metal',
-  BAMBOO = 'bambu'
+  BAMBOO = 'bambu',
 }
 
 // Enums para pedidos
@@ -27,11 +27,11 @@ export enum OrderStatus {
   PROCESSING = 'processing',
   PAID = 'paid',
   SHIPPED = 'shipped',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
 }
 
 export enum PaymentMethod {
   CREDIT_CARD = 'credit_card',
   PIX = 'pix',
-  DEBITO = 'debito'
+  DEBIT_CARD = 'debit_card',
 }

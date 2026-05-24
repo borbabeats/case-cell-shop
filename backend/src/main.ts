@@ -18,19 +18,21 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
       bufferLogs: true,
     });
-    
+
     // Usar logger customizado
     app.useLogger(logger);
-    
+
     // Habilitar validação global
-    app.useGlobalPipes(new ValidationPipe({
-      transform: true,
-      whitelist: true,
-    }));
-    
+    app.useGlobalPipes(
+      new ValidationPipe({
+        transform: true,
+        whitelist: true,
+      }),
+    );
+
     // Habilitar exception filter global
     app.useGlobalFilters(new HttpExceptionFilter());
-    
+
     // Configurar Swagger
     const config = new DocumentBuilder()
       .setTitle('Cell Shop API')
@@ -42,20 +44,23 @@ async function bootstrap() {
 
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);
-    
+
     const port = process.env.PORT ?? 3000;
-    
+
     // Configurar CORS
     const corsOptions: CorsOptions = {
       origin: process.env.CORS_ORIGIN || 'http://localhost:3001',
       credentials: false,
     };
     app.enableCors(corsOptions);
-    
+
     await app.listen(port);
-    
+
     logger.log(`Aplicação iniciada com sucesso na porta ${port}`, 'Bootstrap');
-    logger.log(`Swagger documentation disponível em: http://localhost:${port}/api`, 'Bootstrap');
+    logger.log(
+      `Swagger documentation disponível em: http://localhost:${port}/api`,
+      'Bootstrap',
+    );
   } catch (error) {
     logger.error('Erro ao inicializar a aplicação', error.stack, 'Bootstrap');
     process.exit(1);

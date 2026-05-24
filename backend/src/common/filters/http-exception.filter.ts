@@ -1,4 +1,4 @@
-  import {
+import {
   ExceptionFilter,
   Catch,
   ArgumentsHost,
@@ -58,7 +58,11 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
   private getErrorCode(status: number, exception: HttpException): string {
     // Se a exceção já tiver um código customizado, use-o
-    if (exception instanceof HttpException && exception.getResponse() && typeof exception.getResponse() === 'object') {
+    if (
+      exception instanceof HttpException &&
+      exception.getResponse() &&
+      typeof exception.getResponse() === 'object'
+    ) {
       const response = exception.getResponse() as any;
       if (response.error && typeof response.error === 'string') {
         return response.error;
@@ -79,31 +83,44 @@ export class HttpExceptionFilter implements ExceptionFilter {
     return errorCodes[status] || 'UNKNOWN_ERROR';
   }
 
-  private getErrorMessage(exception: HttpException, exceptionResponse: any): string {
+  private getErrorMessage(
+    exception: HttpException,
+    exceptionResponse: any,
+  ): string {
     // Se for BadRequestException com mensagens de validação
     if (exception instanceof BadRequestException && exceptionResponse) {
-      const response = exceptionResponse as any;
-      
+      const response = exceptionResponse;
+
       if (response.message) {
         if (Array.isArray(response.message)) {
           // Traduzir e limpar mensagens de validação
-          const translatedMessages = response.message.map((msg: string) => 
-            this.cleanValidationMessage(this.translateValidationMessage(msg))
+          const translatedMessages = response.message.map((msg: string) =>
+            this.cleanValidationMessage(this.translateValidationMessage(msg)),
           );
           return translatedMessages.join(', ');
         }
-        return this.cleanValidationMessage(this.translateValidationMessage(response.message));
+        return this.cleanValidationMessage(
+          this.translateValidationMessage(response.message),
+        );
       }
     }
 
-    if (exception instanceof HttpException && exception.getResponse() && typeof exception.getResponse() === 'object') {
+    if (
+      exception instanceof HttpException &&
+      exception.getResponse() &&
+      typeof exception.getResponse() === 'object'
+    ) {
       const response = exception.getResponse() as any;
       if (response.message && !Array.isArray(response.message)) {
-        return this.cleanValidationMessage(this.translateValidationMessage(response.message));
+        return this.cleanValidationMessage(
+          this.translateValidationMessage(response.message),
+        );
       }
     }
 
-    return this.cleanValidationMessage(this.translateValidationMessage(exception.message));
+    return this.cleanValidationMessage(
+      this.translateValidationMessage(exception.message),
+    );
   }
 
   private cleanValidationMessage(message: string): string {
@@ -132,9 +149,16 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   private isPortuguese(message: string): boolean {
-    const portugueseKeywords = ['não', 'deve', 'obrigatório', 'inválido', 'vazio', 'maior'];
-    return portugueseKeywords.some(keyword => 
-      message.toLowerCase().includes(keyword)
+    const portugueseKeywords = [
+      'não',
+      'deve',
+      'obrigatório',
+      'inválido',
+      'vazio',
+      'maior',
+    ];
+    return portugueseKeywords.some((keyword) =>
+      message.toLowerCase().includes(keyword),
     );
   }
 

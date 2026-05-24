@@ -1,4 +1,8 @@
-import { Injectable, LoggerService as NestLoggerService, Scope } from '@nestjs/common';
+import {
+  Injectable,
+  LoggerService as NestLoggerService,
+  Scope,
+} from '@nestjs/common';
 import { logger } from './winston.config';
 
 @Injectable({ scope: Scope.TRANSIENT })

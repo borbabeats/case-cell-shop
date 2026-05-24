@@ -15,10 +15,14 @@ export class CheckoutService {
   private readonly logger = new Logger(CheckoutService.name);
 
   async createCheckout(dto: CreateCheckoutDto) {
-    this.logger.log(`Iniciando checkout para ${dto.items.length} itens`, 'CheckoutService.createCheckout');
+    this.logger.log(
+      `Iniciando checkout para ${dto.items.length} itens`,
+      'CheckoutService.createCheckout',
+    );
 
     try {
-      const { items, totalAmount, paymentMethod, shippingAddress, customerId } = dto;
+      const { items, totalAmount, paymentMethod, shippingAddress, customerId } =
+        dto;
 
       // Validação inicial do payload
       if (!items || items.length === 0) {
@@ -27,18 +31,29 @@ export class CheckoutService {
       }
 
       if (!totalAmount || totalAmount <= 0) {
-        this.logger.warn('Total amount inválido', 'CheckoutService.createCheckout');
-        throw new InvalidPayloadException('Total amount é obrigatório e deve ser maior que 0');
+        this.logger.warn(
+          'Total amount inválido',
+          'CheckoutService.createCheckout',
+        );
+        throw new InvalidPayloadException(
+          'Total amount é obrigatório e deve ser maior que 0',
+        );
       }
 
       if (!paymentMethod) {
-        this.logger.warn('Payment method não informado', 'CheckoutService.createCheckout');
+        this.logger.warn(
+          'Payment method não informado',
+          'CheckoutService.createCheckout',
+        );
         throw new InvalidPayloadException('Payment method é obrigatório');
       }
 
       // 1. Buscar todos os produtos
-      const productIds = items.map(item => item.productId);
-      this.logger.log(`Buscando produtos: ${productIds.join(', ')}`, 'CheckoutService.createCheckout');
+      const productIds = items.map((item) => item.productId);
+      this.logger.log(
+        `Buscando produtos: ${productIds.join(', ')}`,
+        'CheckoutService.createCheckout',
+      );
 
       const foundProducts = await db
         .select()
@@ -46,16 +61,22 @@ export class CheckoutService {
         .where(inArray(products.id, productIds));
 
       // 2. Validação de estoque e existência
-      const productMap = new Map(foundProducts.map(p => [p.id, p]));
+      const productMap = new Map(foundProducts.map((p) => [p.id, p]));
 
       for (const item of items) {
         const product = productMap.get(item.productId);
         if (!product) {
-          this.logger.warn(`Produto não encontrado: ${item.productId}`, 'CheckoutService.createCheckout');
+          this.logger.warn(
+            `Produto não encontrado: ${item.productId}`,
+            'CheckoutService.createCheckout',
+          );
           throw new ProductNotFoundException(item.productId);
         }
         if (product.stock < item.quantity) {
-          this.logger.warn(`Estoque insuficiente para produto ${item.productId}. Disponível: ${product.stock}, Solicitado: ${item.quantity}`, 'CheckoutService.createCheckout');
+          this.logger.warn(
+            `Estoque insuficiente para produto ${item.productId}. Disponível: ${product.stock}, Solicitado: ${item.quantity}`,
+            'CheckoutService.createCheckout',
+          );
           throw new InsufficientStockException(
             item.productId,
             product.name,
@@ -73,13 +94,19 @@ export class CheckoutService {
 
       // Permitir uma pequena diferença devido a precisão de ponto flutuante
       if (Math.abs(calculatedTotal - totalAmount) > 0.01) {
-        this.logger.warn(`Total amount incorreto. Calculado: ${calculatedTotal}, Informado: ${totalAmount}`, 'CheckoutService.createCheckout');
+        this.logger.warn(
+          `Total amount incorreto. Calculado: ${calculatedTotal}, Informado: ${totalAmount}`,
+          'CheckoutService.createCheckout',
+        );
         throw new InvalidTotalAmountException(calculatedTotal, totalAmount);
       }
 
       // 4. Criar Pedido e itens em uma transação
       const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
-      this.logger.log(`Criando pedido ${orderNumber} com valor total ${totalAmount}`, 'CheckoutService.createCheckout');
+      this.logger.log(
+        `Criando pedido ${orderNumber} com valor total ${totalAmount}`,
+        'CheckoutService.createCheckout',
+      );
 
       try {
         // Iniciar transação
@@ -114,7 +141,10 @@ export class CheckoutService {
             .set({ stock: product.stock - item.quantity })
             .where(eq(products.id, item.productId));
 
-          this.logger.debug(`Item adicionado ao pedido: Produto ${item.productId}, Quantidade ${item.quantity}`, 'CheckoutService.createCheckout');
+          this.logger.debug(
+            `Item adicionado ao pedido: Produto ${item.productId}, Quantidade ${item.quantity}`,
+            'CheckoutService.createCheckout',
+          );
         }
 
         // Commit da transação
@@ -128,17 +158,28 @@ export class CheckoutService {
           totalAmount,
         };
 
-        this.logger.log(`Pedido ${orderNumber} criado com sucesso. Order ID: ${newOrder.id}`, 'CheckoutService.createCheckout');
+        this.logger.log(
+          `Pedido ${orderNumber} criado com sucesso. Order ID: ${newOrder.id}`,
+          'CheckoutService.createCheckout',
+        );
         return result;
       } catch (error) {
         // Rollback em caso de erro
-        this.logger.error(`Erro na transação do pedido ${orderNumber}, fazendo rollback`, error.stack, 'CheckoutService.createCheckout');
+        this.logger.error(
+          `Erro na transação do pedido ${orderNumber}, fazendo rollback`,
+          error.stack,
+          'CheckoutService.createCheckout',
+        );
         await db.run('ROLLBACK');
         throw error;
       }
     } catch (error) {
       // Tratamento genérico para evitar timeouts
-      this.logger.error(`Erro no checkout: ${error.message}`, error.stack, 'CheckoutService.createCheckout');
+      this.logger.error(
+        `Erro no checkout: ${error.message}`,
+        error.stack,
+        'CheckoutService.createCheckout',
+      );
       throw error;
     }
   }

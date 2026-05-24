@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   Box,
@@ -19,10 +19,17 @@ import { checkoutService } from "@/app/services/checkoutService";
 import { productService } from "@/app/services/productService";
 import { CheckoutResponse } from "@/app/types/checkout";
 import { Product } from "@/app/types/product";
+import { z } from "zod";
 
 const REDIRECT_DELAY_MS = 5000;
 
-export default function CheckoutPage() {
+// Schema de validação Zod para CEP
+const cepSchema = z.string().refine(
+  (val) => /^\d{2}\.\d{3}-\d{3}$/.test(val),
+  { message: "CEP deve estar no formato XX.XXX-XXX" }
+);
+
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const productId = searchParams.get("productId");
@@ -41,6 +48,25 @@ export default function CheckoutPage() {
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zipCode, setZipCode] = useState("");
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = e.target.value.replace(/\D/g, ''); // Remove não-números
+    if (value.length > 8) value = value.slice(0, 8); // Limita a 8 dígitos
+
+    // Aplica máscara XX.XXX-XXX
+    if (value.length > 5) {
+      value = `${value.slice(0, 2)}.${value.slice(2, 5)}-${value.slice(5)}`;
+    } else if (value.length > 2) {
+      value = `${value.slice(0, 2)}.${value.slice(2)}`;
+    }
+
+    setZipCode(value);
+  };
+
+  const handleLettersOnly = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, ''); // Permite apenas letras e espaços
+    return value;
+  };
 
   useEffect(() => {
     if (!productId) {
@@ -62,6 +88,14 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!product || !quantity || !productId) return;
+
+    // Validar CEP com Zod
+    try {
+      cepSchema.parse(zipCode);
+    } catch (err) {
+      setError("CEP deve estar no formato XX.XXX-XXX");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -203,23 +237,25 @@ export default function CheckoutPage() {
                     fullWidth
                     required
                     value={city}
-                    onChange={(e) => setCity(e.target.value)}
+                    onChange={(e) => setCity(handleLettersOnly(e))}
                   />
                   <TextField
                     label="Estado"
                     fullWidth
                     required
                     value={state}
-                    onChange={(e) => setState(e.target.value)}
+                    onChange={(e) => setState(handleLettersOnly(e))}
                     placeholder="RS"
                   />
                 </Stack>
                 <TextField
                   label="CEP"
                   fullWidth
+                  required
                   value={zipCode}
-                  onChange={(e) => setZipCode(e.target.value)}
-                  placeholder="90120-000"
+                  onChange={handleZipCodeChange}
+                  placeholder="90.120-000"
+                  slotProps={{ htmlInput: { maxLength: 10 } }}
                 />
 
                 {error && <Alert severity="error">{error}</Alert>}
@@ -240,5 +276,13 @@ export default function CheckoutPage() {
         </Card>
       </Container>
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={<CircularProgress />}>
+      <CheckoutContent />
+    </Suspense>
   );
 }
